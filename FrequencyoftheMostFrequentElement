@@ -1,0 +1,37 @@
+import java.util.Arrays;
+
+class Solution {
+    public int maxFrequency(int[] nums, int k) {
+        int frequency = 0;
+        Arrays.sort(nums);
+        long[] prefixSum = new long[nums.length];
+        prefixSum[0] = nums[0];
+        for (int i = 1; i < prefixSum.length; i++) {
+            prefixSum[i] = prefixSum[i - 1] + nums[i];
+        }
+        for (int targetIndex = 0; targetIndex < nums.length; targetIndex++) {
+            frequency = Math.max(frequency, binarySearch(nums, k, targetIndex, prefixSum));
+        }
+        return frequency;
+    }
+
+    public static int binarySearch(int[] nums, int k, int targetIndex, long[] prefixSum) {
+        int target = nums[targetIndex];
+        int low = 0;
+        int end = targetIndex;
+        int result = 0;
+        while (low <= end) {
+            int mid = low + (end - low) / 2;
+            long count = targetIndex - mid + 1;
+            long windowSum = target * count;
+            long currentSum = prefixSum[targetIndex] - prefixSum[mid] + nums[mid];
+            if (windowSum - currentSum <= k) {
+                result = mid;
+                end = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return targetIndex - result + 1;
+    }
+}
