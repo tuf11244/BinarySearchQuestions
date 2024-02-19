@@ -1,0 +1,45 @@
+//https://curiouschild.github.io/leetcode/2019/06/21/divide-chocolate.html
+//LeetCode 1231
+public class Main
+{
+	public static void main(String[] args) {
+		System.out.println("Hello World");
+		int[] arr = {1,2,2,1,2,2,1,2,2};
+		System.out.println(divideChocolate(arr,2));
+	}
+	public static int divideChocolate(int[] arr, int k){
+	    int min = Integer.MAX_VALUE;
+	    int max = 0;
+	    int answer = -1;
+	    for(int i = 0; i < arr.length;i++){
+	        min = Math.min(min,arr[i]);
+	        max = max + arr[i];
+	    }
+	    if(arr.length == k+1){
+	        return min;
+	    }
+	    while(min <= max){
+	        int mid = min + (max-min)/2;
+	        if(helper(arr,k,mid)){
+	            answer = mid;
+	            max = mid -1;
+	        }else{
+	            min = mid + 1;
+	        }
+	        
+	    }
+	    return answer;
+	}
+	public static boolean helper(int[] arr, int k, int mid){
+	    int cuts = 1;
+	    int sweetnessSum = 0;
+	    for(int i = 0; i < arr.length;i++){
+	        sweetnessSum = sweetnessSum + arr[i];
+	        if(sweetnessSum > mid){
+	            cuts++;
+	            sweetnessSum = 0;
+	        }
+	    }
+	    return cuts <= k+1;
+	}
+}
